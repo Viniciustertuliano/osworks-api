@@ -7,4 +7,6 @@ import com.algaworks.osworks.domain.model.Cliente;
 
 @Repository
 public interface ClienteRepository  extends JpaRepository<Cliente, Long>{ // Faz as buscas no banco.
+	
+	Cliente findByEmail(String email);
 }
