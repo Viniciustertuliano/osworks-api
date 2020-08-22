@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.osworks.domain.model.Cliente;
 import com.algaworks.osworks.domain.repository.ClienteRepository;
+import com.algaworks.osworks.domain.service.CadastroClienteService;
 
 @RestController
 @RequestMapping("/clientes")																		//Marcação de mapeamento de rota
@@ -31,6 +32,9 @@ public class ClienteController {
 	
 	@Autowired
 	private ClienteRepository clienteRepository; 													// Faz a injeção do repositorio 
+	
+	@Autowired
+	private CadastroClienteService cadastroCliente;
 	
 	@GetMapping					
 	public List<Cliente> lista() {
@@ -51,7 +55,7 @@ public class ClienteController {
 	@PostMapping																					// Marcação de mapeamento de Post(criação)
 	@ResponseStatus(HttpStatus.CREATED)
 	public Cliente adicionar(@Valid @RequestBody  Cliente cliente) {
-		return 	clienteRepository.save(cliente);													//Salva Novo cliente no Banco 
+		return 	cadastroCliente.salvar(cliente);													//Salva Novo cliente no Banco 
 		
 	}
 	
@@ -61,7 +65,7 @@ public class ClienteController {
 			return ResponseEntity.notFound().build();												//Retorna 404 notFound caso não exista.
 		}
 		cliente.setId(clienteId);																	//Passa o ID do cliente a ser atualizado
-		cliente = clienteRepository.save(cliente);													//Salva Atualização de cliente no banco.
+		cliente = cadastroCliente.salvar(cliente);													//Salva Atualização de cliente no banco.
 		
 		return ResponseEntity.ok(cliente);															//Retorna OK 200 
 	}
@@ -72,7 +76,7 @@ public class ClienteController {
 		if (!clienteRepository.existsById(clienteId)) {												//Verifica se cliente não existe
 			return ResponseEntity.notFound().build();												//Retorna 404 notFound caso não exista.
 		}
-		clienteRepository.deleteById(clienteId);													//Deleta cliente do banco 
+		cadastroCliente.excluir(clienteId);															//Deleta cliente do banco 
 		return ResponseEntity.noContent().build();													//Retorna NOCONTENT  204
 		 
 	}
